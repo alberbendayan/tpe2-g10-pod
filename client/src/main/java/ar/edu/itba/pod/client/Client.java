@@ -1,6 +1,8 @@
 package ar.edu.itba.pod.client;
 
 
+import ar.edu.itba.pod.client.models.City;
+import ar.edu.itba.pod.client.queries.*;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -33,6 +35,21 @@ public class Client {
 
 
         HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
+
+        switch(System.getProperty("query")) {
+            case "1":
+                new Query1(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
+                break;
+            case "2":
+                new Query2(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
+                break;
+            case "3":
+                new Query3(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
+                break;
+            case "4":
+                new Query4(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
+                break;
+        }
 
     }
 }
