@@ -14,6 +14,8 @@ public class Client {
     protected static Logger logger = LoggerFactory.getLogger(Client.class);
     protected static final String CLUSTER_NAME = "g10";
     protected static final String CLUSTER_PASSWORD = "pass";
+
+
     public static void main(String[] args) throws InterruptedException {
 
 
@@ -30,8 +32,7 @@ public class Client {
         clientConfig.setNetworkConfig(clientNetworkConfig);
 
 
-        HazelcastInstance hazelcastInstance =
-                HazelcastClient.newHazelcastClient(clientConfig);
+        HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
 
     }
 }

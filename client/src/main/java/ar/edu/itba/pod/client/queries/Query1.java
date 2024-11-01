@@ -1,4 +1,7 @@
 package ar.edu.itba.pod.client.queries;
 
-public class Query1 {
+import ar.edu.itba.pod.client.Query;
+
+public class Query1 extends Query {
+
 }
