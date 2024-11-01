@@ -8,8 +8,16 @@ import com.hazelcast.core.HazelcastInstance;
 public class Query4 extends Query {
 
     private static final String OUTPUT_HEADER = "Infraction;Max;Min;Diff\n";
+    private final String n;
+    private final String agency;
 
-    public Query4(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath){
+    public Query4(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, String n, String agency){
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
+        this.n = n;
+        this.agency = agency;
     }
+
+
+
+
 }

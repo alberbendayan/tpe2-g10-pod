@@ -20,36 +20,36 @@ public class Client {
 
     public static void main(String[] args) throws InterruptedException {
 
-
+        //Group config
         GroupConfig groupConfig = new GroupConfig().setName(CLUSTER_NAME).setPassword(CLUSTER_PASSWORD);
-        ClientConfig clientConfig = new ClientConfig();
-        clientConfig.setGroupConfig(groupConfig);
 
-
-        clientConfig.setGroupConfig(groupConfig);
+        //Client Network Config
         ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
+        //clientNetworkConfig.addAddress(addresses); TODO: PONER IP DEL CLIENTE
 
-        // TODO: PONER IP DEL CLIENTE
-        //clientNetworkConfig.addAddress(addresses);
-        clientConfig.setNetworkConfig(clientNetworkConfig);
+        // Client Config
+        ClientConfig clientConfig = new ClientConfig().setGroupConfig(groupConfig).setNetworkConfig(clientNetworkConfig);
 
-
+        // Node Client
         HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
 
+        Query query = null;
         switch(System.getProperty("query")) {
             case "1":
-                new Query1(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
+                query = new Query1(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
                 break;
             case "2":
-                new Query2(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
+                query = new Query2(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
                 break;
             case "3":
-                new Query3(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
+                query = new Query3(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
                 break;
             case "4":
-                new Query4(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"));
+                query = new Query4(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"), System.getProperty("n"), System.getProperty("agency"));
                 break;
         }
+
+        query.run();
 
     }
 }

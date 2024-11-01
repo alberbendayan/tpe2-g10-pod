@@ -28,7 +28,7 @@ public abstract class Query {
 
     }
 
-    public void startQuery(){
+    public void run(){
         //create Time File
         try {
             this.writer = new FileWriter(outPath + "/time.txt");
@@ -38,6 +38,9 @@ public abstract class Query {
 
 
         writeTimeFile("Inicio de la lectura del archivo");
+
+
+
         writeTimeFile("Fin de lectura del archivo");
         writeTimeFile("Inicio del trabajo map/reduce");
         writeTimeFile("Fin del trabajo map/reduce");
