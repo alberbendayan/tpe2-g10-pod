@@ -12,4 +12,10 @@ public class Query1 extends Query {
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
     }
 
+    @Override
+    protected void readCSV(){
+
+
+
+    }
 }

@@ -39,10 +39,12 @@ public abstract class Query {
 
         writeTimeFile("Inicio de la lectura del archivo");
 
-
+        readCSV();
 
         writeTimeFile("Fin de lectura del archivo");
         writeTimeFile("Inicio del trabajo map/reduce");
+
+
         writeTimeFile("Fin del trabajo map/reduce");
 
 
@@ -63,4 +65,6 @@ public abstract class Query {
             System.out.println("Error writing time file");
         }
     }
+
+    protected abstract void readCSV();
 }

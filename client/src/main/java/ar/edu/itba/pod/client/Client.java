@@ -48,7 +48,6 @@ public class Client {
                 query = new Query4(hazelcastInstance, City.fromString(System.getProperty("city")), System.getProperty("inPath"), System.getProperty("outPath"), System.getProperty("n"), System.getProperty("agency"));
                 break;
         }
-
         query.run();
 
     }

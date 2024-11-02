@@ -7,7 +7,7 @@ import com.hazelcast.core.HazelcastInstance;
 
 public class Query4 extends Query {
 
-    private static final String OUTPUT_HEADER = "Infraction;Max;Min;Diff\n";
+    private static final String OUTPUT_HEADER = "Infraction;Min;Max;Diff\n";
     private final String n;
     private final String agency;
 
@@ -16,8 +16,4 @@ public class Query4 extends Query {
         this.n = n;
         this.agency = agency;
     }
-
-
-
-
 }
