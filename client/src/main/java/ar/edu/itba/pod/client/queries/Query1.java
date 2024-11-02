@@ -4,6 +4,12 @@ import ar.edu.itba.pod.client.Query;
 import ar.edu.itba.pod.client.models.City;
 import com.hazelcast.core.HazelcastInstance;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
 public class Query1 extends Query {
 
     private static final String OUTPUT_HEADER = "Infraction;Agency;Tickets\n";

@@ -1,0 +1,70 @@
+package models;
+
+import java.time.LocalDate;
+
+public class Ticket {
+    private String plate;
+    private String infractionId;
+    private double fineAmount;
+    private String issuingAgency;
+    private LocalDate issueDate;
+    private String countyName;
+
+    public Ticket(String plate, String infractionId, double fineAmount, String issuingAgency, LocalDate issueDate, String countyName) {
+        this.plate = plate;
+        this.infractionId = infractionId;
+        this.fineAmount = fineAmount;
+        this.issuingAgency = issuingAgency;
+        this.issueDate = issueDate;
+        this.countyName = countyName;
+    }
+
+    // Getters and Setters
+    public String getPlate() {
+        return plate;
+    }
+
+    public void setPlate(String plate) {
+        this.plate = plate;
+    }
+
+    public String getInfractionId() {
+        return infractionId;
+    }
+
+    public void setInfractionId(String infractionId) {
+        this.infractionId = infractionId;
+    }
+
+    public double getFineAmount() {
+        return fineAmount;
+    }
+
+    public void setFineAmount(double fineAmount) {
+        this.fineAmount = fineAmount;
+    }
+
+    public String getIssuingAgency() {
+        return issuingAgency;
+    }
+
+    public void setIssuingAgency(String issuingAgency) {
+        this.issuingAgency = issuingAgency;
+    }
+
+    public LocalDate getIssueDate() {
+        return issueDate;
+    }
+
+    public void setIssueDate(LocalDate issueDate) {
+        this.issueDate = issueDate;
+    }
+
+    public String getCountyName() {
+        return countyName;
+    }
+
+    public void setCountyName(String countyName) {
+        this.countyName = countyName;
+    }
+}

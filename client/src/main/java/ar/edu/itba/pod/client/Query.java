@@ -1,5 +1,8 @@
 package ar.edu.itba.pod.client;
 
+import ar.edu.itba.pod.client.csv.CSVreader;
+import ar.edu.itba.pod.client.csv.CSVreaderCHI;
+import ar.edu.itba.pod.client.csv.CSVreaderNYC;
 import ar.edu.itba.pod.client.models.City;
 import com.hazelcast.core.HazelcastInstance;
 
@@ -17,6 +20,8 @@ public abstract class Query {
     protected String outPath;
     protected String outputHeader;
     protected FileWriter writer;
+
+    protected CSVreader csvReader;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS");
 
     public Query(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, String outputHeader) {
@@ -25,7 +30,13 @@ public abstract class Query {
         this.inPath = inPath;
         this.outPath = outPath;
         this.outputHeader = outputHeader;
-
+        if(this.city.equals("NYC")){
+            csvReader= new CSVreaderNYC();
+        }else if(this.city.equals("CHI")){
+            csvReader= new CSVreaderCHI();
+        }else{
+            throw new IllegalArgumentException();
+        }
     }
 
     public void run(){
