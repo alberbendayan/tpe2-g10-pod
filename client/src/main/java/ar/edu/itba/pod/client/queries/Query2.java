@@ -13,4 +13,13 @@ public class Query2 extends Query {
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
     }
 
+    @Override
+    protected void readCSV() {
+
+    }
+
+    @Override
+    protected void executeJob() {
+
+    }
 }

@@ -54,6 +54,7 @@ public abstract class Query {
         writeTimeFile("Fin de lectura del archivo");
         writeTimeFile("Inicio del trabajo map/reduce");
 
+        executeJob();
 
         writeTimeFile("Fin del trabajo map/reduce");
 
@@ -77,4 +78,6 @@ public abstract class Query {
     }
 
     protected abstract void readCSV();
+
+    protected abstract void executeJob();
 }

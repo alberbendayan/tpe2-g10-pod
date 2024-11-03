@@ -11,9 +11,9 @@ public class FormatterNYC implements Formatter {
 
     @Override
     public Ticket formatTicket(String line) {
-        String[] fields=line.split(";");
-        if(fields.length==6){
-            try{
+        String[] fields = line.split(";");
+        if (fields.length == 6) {
+            try {
                 String plate = fields[0];
                 int infractionId = Integer.parseInt(fields[1]);
                 double fineAmount = Double.parseDouble(fields[2]);
@@ -21,7 +21,7 @@ public class FormatterNYC implements Formatter {
                 LocalDate issueDate = LocalDate.parse(fields[4], DATE_FORMAT);
                 String countyName = fields[5];
                 return new Ticket(plate, String.valueOf(infractionId), fineAmount, issuingAgency, issueDate, countyName);
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         }

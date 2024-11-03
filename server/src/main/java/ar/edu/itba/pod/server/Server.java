@@ -17,18 +17,18 @@ public class Server {
     private static Logger logger = LoggerFactory.getLogger(Server.class);
     private static final String CLUSTER_NAME = "g10";
     private static final String CLUSTER_PASSWORD = "pass";
-    private static final String DEFAULT_ADDRESS ="...";
-    private static final String PUBLIC_ADDRESS ="...";
-    public static void main(String[] args) throws InterruptedException, IOException {
+    private static final String DEFAULT_ADDRESS = "...";
+    private static final String PUBLIC_ADDRESS = "...";
 
+    public static void main(String[] args) throws InterruptedException, IOException {
 
         String network = null;
         List<String> memberAddresses = new ArrayList<>();
         String address = DEFAULT_ADDRESS;
 
 
-        if(System.getProperty("address") != null){
-            address= System.getProperty("address");
+        if (System.getProperty("address") != null) {
+            address = System.getProperty("address");
         }
 
         logger.info("hz-config Server Starting ...");
@@ -45,8 +45,7 @@ public class Server {
             tcpIpConfig = new TcpIpConfig().setEnabled(true);
             memberAddresses.forEach(tcpIpConfig::addMember);
             joinConfig = new JoinConfig().setMulticastConfig(multicastConfig).setTcpIpConfig(tcpIpConfig);
-        }
-        else {
+        } else {
             multicastConfig.setEnabled(true);
             joinConfig = new JoinConfig().setMulticastConfig(multicastConfig);
         }
@@ -61,8 +60,7 @@ public class Server {
         }
         config.setNetworkConfig(networkConfig);
 
-
-
         HazelcastInstance hz = Hazelcast.newHazelcastInstance(config);
 
-    }}
+    }
+}

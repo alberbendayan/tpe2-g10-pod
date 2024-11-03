@@ -16,4 +16,14 @@ public class Query4 extends Query {
         this.n = n;
         this.agency = agency;
     }
+
+    @Override
+    protected void readCSV() {
+
+    }
+
+    @Override
+    protected void executeJob() {
+
+    }
 }
