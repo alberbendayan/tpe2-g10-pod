@@ -19,7 +19,8 @@ public class InfractionAndAgencyCollator implements Collator<Map.Entry<Infractio
                         .thenComparing(item -> item.getInfractionAndAgency().getAgency())     // Orden alfabético por agencia
         );
         for (Map.Entry<InfractionAndAgency, Long> entry : values) {
-            toReturn.add(new InfractionAndAgencyTotal(entry.getKey(), entry.getValue()));
+            if(entry.getValue()!=0)
+                toReturn.add(new InfractionAndAgencyTotal(entry.getKey(), entry.getValue()));
         }
         return toReturn;
     }
