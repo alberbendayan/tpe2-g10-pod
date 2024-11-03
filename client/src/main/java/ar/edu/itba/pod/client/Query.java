@@ -1,12 +1,11 @@
 package ar.edu.itba.pod.client;
 
-import ar.edu.itba.pod.client.csv.CSVreader;
-import ar.edu.itba.pod.client.csv.CSVreaderCHI;
-import ar.edu.itba.pod.client.csv.CSVreaderNYC;
+import ar.edu.itba.pod.client.csv.Formatter;
+import ar.edu.itba.pod.client.csv.FormatterCHI;
+import ar.edu.itba.pod.client.csv.FormatterNYC;
 import ar.edu.itba.pod.client.models.City;
 import com.hazelcast.core.HazelcastInstance;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Instant;
@@ -21,7 +20,7 @@ public abstract class Query {
     protected String outputHeader;
     protected FileWriter writer;
 
-    protected CSVreader csvReader;
+    protected Formatter cityFormatter;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS");
 
     public Query(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, String outputHeader) {
@@ -31,9 +30,9 @@ public abstract class Query {
         this.outPath = outPath;
         this.outputHeader = outputHeader;
         if(this.city.equals("NYC")){
-            csvReader= new CSVreaderNYC();
+            cityFormatter= new FormatterNYC();
         }else if(this.city.equals("CHI")){
-            csvReader= new CSVreaderCHI();
+            cityFormatter= new FormatterCHI();
         }else{
             throw new IllegalArgumentException();
         }
