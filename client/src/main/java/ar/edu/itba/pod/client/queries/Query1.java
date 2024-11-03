@@ -1,6 +1,7 @@
 package ar.edu.itba.pod.client.queries;
 
 import ar.edu.itba.pod.client.Query;
+import ar.edu.itba.pod.client.csv.CSVwriter;
 import ar.edu.itba.pod.client.models.City;
 import collators.InfractionAndAgencyCollator;
 import com.hazelcast.core.HazelcastInstance;
@@ -86,7 +87,8 @@ public class Query1 extends Query {
 
         try{
             SortedSet<InfractionAndAgencyTotal> result = future.get();
-            //ESCRIBIR ESTO EN CSV
+            CSVwriter<InfractionAndAgencyTotal> writer = new CSVwriter<>();
+            writer.write(outPath+"/query1.csv", OUTPUT_HEADER, result);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -26,5 +26,9 @@ public class InfractionAndAgencyTotal {
         return Objects.equals(infractionAndAgency, that.infractionAndAgency) && Objects.equals(total, that.total);
     }
 
+    @Override
+    public String toString() {
+        return infractionAndAgency.getInfraction()+";"+infractionAndAgency.getAgency()+";"+total;
+    }
 
 }
