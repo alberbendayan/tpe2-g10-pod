@@ -65,7 +65,7 @@ public class Client {
                         City.fromString(System.getProperty("city")),
                         System.getProperty("inPath"),
                         System.getProperty("outPath"),
-                        System.getProperty("n"),
+                        Integer.parseInt(System.getProperty("n")),
                         System.getProperty("agency"));
                 break;
         }
