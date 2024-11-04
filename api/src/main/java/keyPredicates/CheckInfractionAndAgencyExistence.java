@@ -17,6 +17,6 @@ public class CheckInfractionAndAgencyExistence implements KeyPredicate<Infractio
 
     @Override
     public boolean evaluate(InfractionAndAgency infractionAndAgency) {
-        return validAgencies.contains(infractionAndAgency.getAgency()) && validInfractions.contains(infractionAndAgency.getInfraction());
+        return validAgencies.contains(infractionAndAgency.getAgency()) && validInfractions.contains(infractionAndAgency.getInfractionId()) && infractionAndAgency.getInfractionName() != null;
     }
 }

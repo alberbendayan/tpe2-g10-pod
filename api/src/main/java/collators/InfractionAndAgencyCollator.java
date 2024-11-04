@@ -15,7 +15,7 @@ public class InfractionAndAgencyCollator implements Collator<Map.Entry<Infractio
     public SortedSet<InfractionAndAgencyTotal> collate(Iterable<Map.Entry<InfractionAndAgency, Long>> values) {
         SortedSet<InfractionAndAgencyTotal> toReturn = new TreeSet<>(
                 Comparator.comparing(InfractionAndAgencyTotal::getTotal, Comparator.reverseOrder()) // Orden descendente por total
-                        .thenComparing(item -> item.getInfractionAndAgency().getInfraction()) // Orden alfabético por infracción
+                        .thenComparing(item -> item.getInfractionAndAgency().getInfractionName()) // Orden alfabético por infracción
                         .thenComparing(item -> item.getInfractionAndAgency().getAgency())     // Orden alfabético por agencia
         );
         for (Map.Entry<InfractionAndAgency, Long> entry : values) {

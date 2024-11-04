@@ -45,18 +45,18 @@ public class Query1 extends Query {
 
     @Override
     protected void readCSV() {
-        try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets", city.getName(), ".csv")).skip(1)) {
-            tickets.forEach(line -> {
-                Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(new InfractionAndAgency(ticket.getInfractionId(), ticket.getIssuingAgency()), ticket);
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         try (Stream<String> infractions = Files.lines(Paths.get(inPath, "/infractions", city.getName(), ".csv")).skip(1)) {
             infractions.forEach(line -> {
                 String[] fields = line.split(";");
                 infractionIMap.put(fields[0], fields[1]);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets", city.getName(), ".csv")).skip(1)) {
+            tickets.forEach(line -> {
+                Ticket ticket = cityFormatter.formatTicket(line);
+                ticketIMap.put(new InfractionAndAgency(ticket.getInfractionId(), ticket.getIssuingAgency(), infractionIMap.getOrDefault(ticket.getInfractionId(), null)), ticket);
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -85,10 +85,10 @@ public class Query1 extends Query {
                 .reducer(new InfractionAndAgencyReducer())
                 .submit(new InfractionAndAgencyCollator());
 
-        try{
+        try {
             SortedSet<InfractionAndAgencyTotal> result = future.get();
             CSVwriter<InfractionAndAgencyTotal> writer = new CSVwriter<>();
-            writer.write(outPath+"/query1.csv", OUTPUT_HEADER, result);
+            writer.write(outPath + "/query1.csv", OUTPUT_HEADER, result);
         } catch (Exception e) {
             e.printStackTrace();
         }

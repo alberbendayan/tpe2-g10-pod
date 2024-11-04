@@ -28,7 +28,7 @@ public class InfractionAndAgencyTotal {
 
     @Override
     public String toString() {
-        return infractionAndAgency.getInfraction()+";"+infractionAndAgency.getAgency()+";"+total;
+        return infractionAndAgency.toString() + ";" + total;
     }
 
 }

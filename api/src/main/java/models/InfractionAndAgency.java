@@ -3,18 +3,23 @@ package models;
 import java.util.Objects;
 
 public class InfractionAndAgency {
-    private String infraction;
+    private String infractionId;
     private String agency;
+    private String infractionName;
 
 
-    public InfractionAndAgency(String infraction, String agency) {
-        this.infraction = infraction;
+    public InfractionAndAgency(String infractionId, String agency, String infractionName) {
+        this.infractionId = infractionId;
         this.agency = agency;
-
+        this.infractionName = infractionName;
     }
 
-    public String getInfraction() {
-        return infraction;
+    public String getInfractionId() {
+        return infractionId;
+    }
+
+    public String getInfractionName() {
+        return infractionName;
     }
 
     public String getAgency() {
@@ -22,23 +27,19 @@ public class InfractionAndAgency {
     }
 
     @Override
-    public String toString() {
-        return "InfractionAndAgency{" +
-                "infraction='" + infraction + '\'' +
-                ", agency='" + agency + '\'' +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if(!(o instanceof InfractionAndAgency that)) return false;
-        return infraction.equals(that.infraction) && agency.equals(that.agency);
+        if (!(o instanceof InfractionAndAgency that)) return false;
+        return infractionId.equals(that.infractionId) && agency.equals(that.agency) && infractionName.equals(that.infractionName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(infraction, agency);
+        return Objects.hash(infractionId, agency, infractionName);
     }
 
+    @Override
+    public String toString() {
+        return infractionName + ";" + agency;
+    }
 }
