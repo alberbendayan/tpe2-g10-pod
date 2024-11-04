@@ -20,6 +20,10 @@ public class CountyPercentage {
         return county;
     }
 
+    public Double getPercentage() {
+        return percentage;
+    }
+
     public void setPercentage(Double percentage) {
         this.percentage = truncateToTwoDecimals(percentage);
     }
