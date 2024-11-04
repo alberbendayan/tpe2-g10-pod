@@ -2,10 +2,11 @@ package keyPredicates;
 
 import com.hazelcast.mapreduce.KeyPredicate;
 import models.InfractionAndAgency;
+import models.Ticket;
 
 import java.util.Set;
 
-public class CheckInfractionAndAgencyExistence implements KeyPredicate<InfractionAndAgency> {
+public class CheckInfractionAndAgencyExistence implements KeyPredicate<Ticket> {
 
     private final Set<String> validAgencies;
     private final Set<String> validInfractions;
@@ -16,7 +17,7 @@ public class CheckInfractionAndAgencyExistence implements KeyPredicate<Infractio
     }
 
     @Override
-    public boolean evaluate(InfractionAndAgency infractionAndAgency) {
-        return validAgencies.contains(infractionAndAgency.getAgency()) && validInfractions.contains(infractionAndAgency.getInfractionId()) && infractionAndAgency.getInfractionName() != null;
+    public boolean evaluate(Ticket ticket) {
+        return validAgencies.contains(ticket.getIssuingAgency()) && validInfractions.contains(ticket.getInfractionId());
     }
 }

@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 public class Query1 extends Query {
 
-    private IMap<InfractionAndAgency, Ticket> ticketIMap;
+    private IMap<Ticket, InfractionAndAgency> ticketIMap;
     private IMap<String, String> infractionIMap;
     private IMap<String, String> agencyIMap;
 
@@ -56,7 +56,7 @@ public class Query1 extends Query {
         try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(new InfractionAndAgency(ticket.getInfractionId(), ticket.getIssuingAgency(), infractionIMap.getOrDefault(ticket.getInfractionId(), null)), ticket);
+                ticketIMap.put(ticket, new InfractionAndAgency(ticket.getInfractionId(), ticket.getIssuingAgency(), infractionIMap.getOrDefault(ticket.getInfractionId(), null)));
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,7 +77,7 @@ public class Query1 extends Query {
         Set<String> validInfractions = infractionIMap.keySet();
 
         JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query1");
-        Job<InfractionAndAgency, Ticket> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
+        Job<Ticket, InfractionAndAgency> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
         ICompletableFuture<SortedSet<InfractionAndAgencyTotal>> future = job
                 .keyPredicate(new CheckInfractionAndAgencyExistence(validAgencies, validInfractions))
                 .mapper(new InfractionAndAgencyMapper())

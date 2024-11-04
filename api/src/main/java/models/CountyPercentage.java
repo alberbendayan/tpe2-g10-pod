@@ -39,7 +39,7 @@ public class CountyPercentage {
 
     @Override
     public String toString() {
-        return county+";"+percentage;
+        return county+";"+percentage+"%";
     }
 
 }
