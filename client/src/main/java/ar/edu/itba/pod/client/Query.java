@@ -79,7 +79,7 @@ public abstract class Query {
     protected void writeTimeFile(String string){
         try {
             String formattedTime = formatter.format(Instant.now().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
-            writer.write(formattedTime + " INFO - " + string + "\n");
+            writer.write(formattedTime  + " INFO - " + string + "\n");
         }
         catch (IOException e){
             System.out.println("Error writing time file");

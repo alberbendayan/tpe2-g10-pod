@@ -45,7 +45,9 @@ public class CountyCollator implements Collator<Map.Entry<CountyInfractionAndPla
 
             double repeatedPercentage = totalPlatesCount == 0 ? 0.0 : (100.0 * totalRepeatedPlatesCount / totalPlatesCount);
 
-            result.add(new CountyPercentage(county, repeatedPercentage));
+            if(repeatedPercentage > 0) {
+                result.add(new CountyPercentage(county, repeatedPercentage));
+            }
         }
 
         return result;

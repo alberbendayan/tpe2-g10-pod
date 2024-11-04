@@ -1,8 +1,10 @@
 package models;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class CountyInfractionAndPlate {
+public class CountyInfractionAndPlate implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String county;
     private String plate;
     private String infractionId;
@@ -16,7 +18,6 @@ public class CountyInfractionAndPlate {
     public String getCounty() {
         return county;
     }
-
 
     public String getPlate() {
         return plate;
@@ -35,6 +36,6 @@ public class CountyInfractionAndPlate {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof CountyInfractionAndPlate that)) return false;
-        return county.equals(that.county) &&  plate.equals(that.plate) && infractionId.equals(that.infractionId);
+        return county.equals(that.county) && plate.equals(that.plate) && infractionId.equals(that.infractionId);
     }
 }

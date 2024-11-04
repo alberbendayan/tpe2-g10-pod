@@ -1,8 +1,10 @@
 package models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Ticket {
+public class Ticket implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String plate;
     private String infractionId;
     private Long fineAmount;

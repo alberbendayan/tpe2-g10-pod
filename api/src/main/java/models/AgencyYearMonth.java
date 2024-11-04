@@ -1,9 +1,11 @@
 package models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class AgencyYearMonth {
+public class AgencyYearMonth implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String agency;
     private int year;
     private int month;
@@ -28,18 +30,18 @@ public class AgencyYearMonth {
 
     @Override
     public String toString() {
-        return agency+";"+year+";"+month;
+        return agency + ";" + year + ";" + month;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if(!(o instanceof AgencyYearMonth that)) return false;
+        if (!(o instanceof AgencyYearMonth that)) return false;
         return year == that.year && month == that.month && agency.equals(that.agency);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(agency,year,month);
+        return Objects.hash(agency, year, month);
     }
 }

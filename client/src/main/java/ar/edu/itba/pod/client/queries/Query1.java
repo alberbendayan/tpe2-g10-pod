@@ -61,7 +61,7 @@ public class Query1 extends Query {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try (Stream<String> agencies = Files.lines(Paths.get(inPath, "/agencies", city.getName(), ".csv")).skip(1)) {
+        try (Stream<String> agencies = Files.lines(Paths.get(inPath, "/agencies"+ city.getName()+ ".csv")).skip(1)) {
             agencies.forEach(line -> {
                 agencyIMap.put(line, line);
             });

@@ -1,12 +1,13 @@
 package models;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class InfractionAndAgency {
+public class InfractionAndAgency implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String infractionId;
     private String agency;
     private String infractionName;
-
 
     public InfractionAndAgency(String infractionId, String agency, String infractionName) {
         this.infractionId = infractionId;
