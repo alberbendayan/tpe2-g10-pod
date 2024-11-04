@@ -75,7 +75,7 @@ public class Query4 extends Query {
 
         try {
             SortedSet<InfractionAndAmountStats> result = future.get();
-            CSVwriter<InfractionAndAgencyTotal> writer = new CSVwriter<>();
+            CSVwriter<InfractionAndAmountStats> writer = new CSVwriter<>();
             writer.write(outPath + "/query4.csv", OUTPUT_HEADER, result);
         } catch (Exception e) {
             e.printStackTrace();
