@@ -14,6 +14,6 @@ for i in "$@"; do
     esac
 done
 
-MAIN_CLASS="ar.edu.itba.pod.client.queries.Client"
+MAIN_CLASS="ar.edu.itba.pod.client.Client"
 
 java -Dquery=1 $JAVA_OPTS -cp 'lib/jars/*' $MAIN_CLASS $*

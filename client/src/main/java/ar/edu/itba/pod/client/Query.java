@@ -8,6 +8,8 @@ import com.hazelcast.core.HazelcastInstance;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
@@ -21,7 +23,7 @@ public abstract class Query {
     protected FileWriter writer;
 
     protected Formatter cityFormatter;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS");
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public Query(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, String outputHeader) {
         this.hazelcastInstance = hazelcastInstance;
@@ -29,22 +31,28 @@ public abstract class Query {
         this.inPath = inPath;
         this.outPath = outPath;
         this.outputHeader = outputHeader;
-        if(this.city.equals("NYC")){
+        try {
+            Path outputPath = Path.of(outPath);
+            if (Files.notExists(outputPath)) {
+                Files.createDirectories(outputPath);
+            }
+            this.writer = new FileWriter(outPath + "/time.txt");
+        } catch (IOException e) {
+            System.out.println("Error creating time file");
+        }
+        if(this.city.getName().equals("NYC")){
             cityFormatter= new FormatterNYC();
-        }else if(this.city.equals("CHI")){
+        }else if(this.city.getName().equals("CHI")){
             cityFormatter= new FormatterCHI();
         }else{
             throw new IllegalArgumentException();
         }
+
     }
 
     public void run(){
         //create Time File
-        try {
-            this.writer = new FileWriter(outPath + "/time.txt");
-        } catch(IOException e){
-            System.out.println("Error creating time file");
-        }
+
 
 
         writeTimeFile("Inicio de la lectura del archivo");
@@ -70,7 +78,8 @@ public abstract class Query {
 
     protected void writeTimeFile(String string){
         try {
-            writer.write(formatter.format(Instant.now()) + " INFO - " + string + "\n");
+            String formattedTime = formatter.format(Instant.now().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
+            writer.write(formattedTime + " INFO - " + string + "\n");
         }
         catch (IOException e){
             System.out.println("Error writing time file");

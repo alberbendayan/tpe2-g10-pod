@@ -43,15 +43,15 @@ public class Query2 extends Query {
 
     @Override
     protected void readCSV() {
-        try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets", city.getName(), ".csv")).skip(1)) {
+        try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(new AgencyYearMonth(ticket.getIssuingAgency(),ticket.getIssueDate()),ticket);
+                ticketIMap.put(new AgencyYearMonth(ticket.getIssuingAgency(),ticket.getIssueDate()),ticket.getFineAmount());
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try (Stream<String> agencies = Files.lines(Paths.get(inPath, "/agencies", city.getName(), ".csv")).skip(1)) {
+        try (Stream<String> agencies = Files.lines(Paths.get(inPath, "/agencies"+ city.getName()+ ".csv")).skip(1)) {
             agencies.forEach(line -> {
                 agencyIMap.put(line, line);
             });
@@ -64,7 +64,7 @@ public class Query2 extends Query {
     protected void executeJob() {
         Set<String> validAgencies = agencyIMap.keySet();
 
-        JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query1");
+        JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query2");
         Job<AgencyYearMonth, Long> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
         ICompletableFuture<SortedSet<AgencyYearMonthTotal>> future = job
                 .keyPredicate(new CheckAgencyExistence(validAgencies))

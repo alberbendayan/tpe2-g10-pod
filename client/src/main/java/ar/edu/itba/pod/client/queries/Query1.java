@@ -45,7 +45,7 @@ public class Query1 extends Query {
 
     @Override
     protected void readCSV() {
-        try (Stream<String> infractions = Files.lines(Paths.get(inPath, "/infractions", city.getName(), ".csv")).skip(1)) {
+        try (Stream<String> infractions = Files.lines(Paths.get(inPath, "/infractions"+ city.getName()+ ".csv")).skip(1)) {
             infractions.forEach(line -> {
                 String[] fields = line.split(";");
                 infractionIMap.put(fields[0], fields[1]);
@@ -53,7 +53,7 @@ public class Query1 extends Query {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets", city.getName(), ".csv")).skip(1)) {
+        try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
                 ticketIMap.put(new InfractionAndAgency(ticket.getInfractionId(), ticket.getIssuingAgency(), infractionIMap.getOrDefault(ticket.getInfractionId(), null)), ticket);

@@ -1,6 +1,5 @@
 package ar.edu.itba.pod.server;
 
-
 import com.hazelcast.config.*;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
@@ -17,19 +16,14 @@ public class Server {
     private static Logger logger = LoggerFactory.getLogger(Server.class);
     private static final String CLUSTER_NAME = "g10";
     private static final String CLUSTER_PASSWORD = "pass";
-    private static final String DEFAULT_ADDRESS = "...";
-    private static final String PUBLIC_ADDRESS = "...";
+    private static final String DEFAULT_ADDRESS = "127.0.0.1";
+    private static final String PUBLIC_ADDRESS = "127.0.0.1";
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
-        String network = null;
+        String network = null;  // Puede cambiarse a una dirección específica si es necesario
         List<String> memberAddresses = new ArrayList<>();
         String address = DEFAULT_ADDRESS;
-
-
-        if (System.getProperty("address") != null) {
-            address = System.getProperty("address");
-        }
 
         logger.info("hz-config Server Starting ...");
         Config config = new Config();
@@ -39,7 +33,8 @@ public class Server {
         MulticastConfig multicastConfig = new MulticastConfig();
         JoinConfig joinConfig;
         TcpIpConfig tcpIpConfig;
-        // agregamos los miembros
+
+        // Configuración de miembros del cluster
         if (!memberAddresses.isEmpty()) {
             multicastConfig.setEnabled(false);
             tcpIpConfig = new TcpIpConfig().setEnabled(true);
@@ -49,9 +44,15 @@ public class Server {
             multicastConfig.setEnabled(true);
             joinConfig = new JoinConfig().setMulticastConfig(multicastConfig);
         }
-        InterfacesConfig interfacesConfig = new InterfacesConfig()
-                .setInterfaces(Collections.singletonList(network))
-                .setEnabled(true);
+
+        // Configuración de interfaces de red
+        InterfacesConfig interfacesConfig = new InterfacesConfig();
+        if (network != null) {
+            interfacesConfig.setInterfaces(Collections.singletonList(network)).setEnabled(true);
+        } else {
+            interfacesConfig.setEnabled(false); // Desactiva si no se necesita configurar una interfaz específica
+        }
+
         NetworkConfig networkConfig = new NetworkConfig()
                 .setInterfaces(interfacesConfig)
                 .setJoin(joinConfig);
@@ -60,7 +61,7 @@ public class Server {
         }
         config.setNetworkConfig(networkConfig);
 
+        // Inicializar la instancia de Hazelcast
         HazelcastInstance hz = Hazelcast.newHazelcastInstance(config);
-
     }
 }

@@ -20,7 +20,7 @@ public class FormatterCHI implements Formatter {
                 String unitDescription = fields[2];
                 String licensePlateNumber = fields[3];
                 String violationCode = fields[4];
-                int fineAmount = Integer.parseInt(fields[5]);
+                Long fineAmount = Math.round(Double.parseDouble(fields[5]));
                 return new Ticket(licensePlateNumber,violationCode,fineAmount,unitDescription,issueDate.toLocalDate(),communityAreaName);
             }catch(NumberFormatException e){
                 e.printStackTrace();

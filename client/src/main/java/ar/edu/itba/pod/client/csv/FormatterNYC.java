@@ -15,12 +15,12 @@ public class FormatterNYC implements Formatter {
         if (fields.length == 6) {
             try {
                 String plate = fields[0];
-                int infractionId = Integer.parseInt(fields[1]);
-                double fineAmount = Double.parseDouble(fields[2]);
+                String infractionId =fields[1];
+                Long fineAmount = Math.round(Double.parseDouble(fields[2]));
                 String issuingAgency = fields[3];
                 LocalDate issueDate = LocalDate.parse(fields[4], DATE_FORMAT);
                 String countyName = fields[5];
-                return new Ticket(plate, String.valueOf(infractionId), fineAmount, issuingAgency, issueDate, countyName);
+                return new Ticket(plate, infractionId, fineAmount, issuingAgency, issueDate, countyName);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
