@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 public class Query4 extends Query {
 
-    private static final String OUTPUT_HEADER = "Infraction;Min;Max;Diff\n";
+    private static final String OUTPUT_HEADER = "Infraction;Min;Max;Diff";
     private final Integer n;
     private final String agency;
     private IMap<Ticket, InfractionAndAmount> ticketIMap;
@@ -36,7 +36,7 @@ public class Query4 extends Query {
     public Query4(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, Integer n, String agency){
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
         this.n = n;
-        this.agency = agency;
+        this.agency = agency.replace('_',' ');
         this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q4");
         this.infractionIMap = hazelcastInstance.getMap("g10-infractions-q4");
     }

@@ -32,7 +32,7 @@ public class Query3 extends Query {
     private LocalDate to;
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private static final String OUTPUT_HEADER = "County;Percentage\n";
+    private static final String OUTPUT_HEADER = "County;Percentage";
 
     public Query3(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, int n, LocalDate from, LocalDate to) {
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);

@@ -34,7 +34,7 @@ public class Query1 extends Query {
     private IMap<String, String> infractionIMap;
     private IMap<String, String> agencyIMap;
 
-    private static final String OUTPUT_HEADER = "Infraction;Agency;Tickets\n";
+    private static final String OUTPUT_HEADER = "Infraction;Agency;Tickets";
 
     public Query1(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath) {
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);

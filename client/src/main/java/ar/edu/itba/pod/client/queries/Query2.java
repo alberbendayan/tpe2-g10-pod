@@ -33,7 +33,7 @@ public class Query2 extends Query {
     private IMap<AgencyYearMonth, Long> ticketIMap;
     private IMap<String, String> agencyIMap;
 
-    private static final String OUTPUT_HEADER = "Agency;Year;Month;YTD\n";
+    private static final String OUTPUT_HEADER = "Agency;Year;Month;YTD";
 
     public Query2(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath){
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
