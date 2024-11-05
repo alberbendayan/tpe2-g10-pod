@@ -25,6 +25,7 @@ public abstract class Query {
     protected Formatter cityFormatter;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSSS");
     public Query(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, String outputHeader) {
         this.hazelcastInstance = hazelcastInstance;
         this.city = city;
@@ -78,7 +79,7 @@ public abstract class Query {
 
     protected void writeTimeFile(String string){
         try {
-            String formattedTime = formatter.format(Instant.now().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
+            String formattedTime = dateTimeFormatter.format(Instant.now().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
             writer.write(formattedTime  + " INFO - " + string + "\n");
         }
         catch (IOException e){

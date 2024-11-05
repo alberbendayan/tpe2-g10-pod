@@ -37,8 +37,8 @@ public class Query2 extends Query {
 
     public Query2(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath){
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
-        this.ticketIMap = hazelcastInstance.getMap("g10-tickets");
-        this.agencyIMap = hazelcastInstance.getMap("g10-agencies");
+        this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q2");
+        this.agencyIMap = hazelcastInstance.getMap("g10-agencies-q2");
     }
 
     @Override

@@ -1,4 +1,4 @@
-query1.sh#!/bin/bash
+#!/bin/bash
 cd "$(dirname "$0")"
 
 PATH_TO_CODE_BASE=`pwd`

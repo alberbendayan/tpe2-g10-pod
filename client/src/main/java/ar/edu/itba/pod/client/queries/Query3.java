@@ -39,7 +39,7 @@ public class Query3 extends Query {
         this.n = n;
         this.from = from;
         this.to = to;
-        this.ticketIMap = hazelcastInstance.getMap("g10-tickets");
+        this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q3");
     }
     @Override
     protected void readCSV() {

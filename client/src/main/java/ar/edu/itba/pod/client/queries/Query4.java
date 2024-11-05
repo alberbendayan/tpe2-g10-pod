@@ -37,8 +37,8 @@ public class Query4 extends Query {
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
         this.n = n;
         this.agency = agency;
-        this.ticketIMap = hazelcastInstance.getMap("g10-tickets");
-        this.infractionIMap = hazelcastInstance.getMap("g10-infractions");
+        this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q4");
+        this.infractionIMap = hazelcastInstance.getMap("g10-infractions-q4");
     }
 
     @Override
