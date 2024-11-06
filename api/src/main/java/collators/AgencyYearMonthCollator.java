@@ -6,6 +6,7 @@ import models.AgencyYearMonthTotal;
 import models.InfractionAndAgency;
 import models.InfractionAndAgencyTotal;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class AgencyYearMonthCollator implements Collator<Map.Entry<AgencyYearMonth, Long>, SortedSet<AgencyYearMonthTotal>> {
@@ -24,11 +25,12 @@ public class AgencyYearMonthCollator implements Collator<Map.Entry<AgencyYearMon
 
         SortedSet<AgencyYearMonthTotal> result = new TreeSet<>(
                 Comparator.comparing((AgencyYearMonthTotal item) -> item.getAgencyYearMonth().getAgency())
-                .thenComparing(item -> item.getAgencyYearMonth().getYear())
-                .thenComparing(item -> item.getAgencyYearMonth().getMonth()));
+                        .thenComparing(item -> item.getAgencyYearMonth().getYear())
+                        .thenComparing(item -> item.getAgencyYearMonth().getMonth()));
         long yearToDateSum = 0;
         String currentAgency = null;
         int currentYear = -1;
+        int currentMonth = 1;
 
         for (Map.Entry<AgencyYearMonth, Long> entry : sortedMap.entrySet()) {
             AgencyYearMonth key = entry.getKey();
@@ -37,11 +39,23 @@ public class AgencyYearMonthCollator implements Collator<Map.Entry<AgencyYearMon
                 yearToDateSum = 0;
                 currentAgency = key.getAgency();
                 currentYear = key.getYear();
+                currentMonth = 1;
             }
 
+
+            while (currentMonth < key.getMonth() && currentAgency != null) {
+                AgencyYearMonth missingMonth = new AgencyYearMonth(currentAgency, LocalDate.of(currentYear, currentMonth, 1));
+                if(yearToDateSum >0)
+                    result.add(new AgencyYearMonthTotal(missingMonth, yearToDateSum));
+                currentMonth++;
+            }
+
+
             yearToDateSum += entry.getValue();
-            if(yearToDateSum!=0)
+            if (yearToDateSum != 0)
                 result.add(new AgencyYearMonthTotal(key, yearToDateSum));
+
+            currentMonth = key.getMonth() + 1;
         }
         return result;
     }
