@@ -6,10 +6,11 @@ import models.AgencyYearMonth;
 import models.InfractionAndAgency;
 import models.Ticket;
 
-public class AgencyYearMonthMapper implements Mapper<Ticket,AgencyYearMonth, AgencyYearMonth, Long> {
+public class AgencyYearMonthMapper implements Mapper<AgencyYearMonth, Long, AgencyYearMonth, Long> {
 
     @Override
-    public void map(Ticket ticket,AgencyYearMonth agencyYearMonth, Context<AgencyYearMonth, Long> context) {
-        context.emit(agencyYearMonth, ticket.getFineAmount());
+    public void map(AgencyYearMonth agencyYearMonth, Long amount, Context<AgencyYearMonth, Long> context) {
+        context.emit(agencyYearMonth, amount);
     }
+
 }

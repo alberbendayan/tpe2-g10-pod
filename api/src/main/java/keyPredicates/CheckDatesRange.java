@@ -6,7 +6,7 @@ import models.Ticket;
 
 import java.time.LocalDate;
 
-public class CheckDatesRange implements KeyPredicate<Ticket> {
+public class CheckDatesRange implements KeyPredicate<CountyPlateInfractionAndDate> {
 
     LocalDate from;
     LocalDate to;
@@ -15,8 +15,8 @@ public class CheckDatesRange implements KeyPredicate<Ticket> {
         this.to = to;
     }
     @Override
-    public boolean evaluate(Ticket ticket) {
-        return ticket.getIssueDate().isAfter(from) && ticket.getIssueDate().isBefore(to);
+    public boolean evaluate(CountyPlateInfractionAndDate countyAndDate) {
+        return countyAndDate.getDate().isAfter(from) && countyAndDate.getDate().isBefore(to);
     }
 
 

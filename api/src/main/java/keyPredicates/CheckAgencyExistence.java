@@ -7,15 +7,15 @@ import models.Ticket;
 
 import java.util.Set;
 
-public class CheckAgencyExistence implements KeyPredicate<Ticket> {
+public class CheckAgencyExistence implements KeyPredicate<AgencyYearMonth> {
     private final Set<String> validAgencies;
     public CheckAgencyExistence(Set<String> validAgencies) {
         this.validAgencies = validAgencies;
     }
 
     @Override
-    public boolean evaluate(Ticket ticket) {
-        return validAgencies.contains(ticket.getIssuingAgency());
+    public boolean evaluate(AgencyYearMonth agencyYearMonth) {
+        return validAgencies.contains(agencyYearMonth.getAgency());
     }
 
 }

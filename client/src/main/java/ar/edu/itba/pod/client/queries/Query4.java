@@ -24,20 +24,21 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.SortedSet;
 import java.util.stream.Stream;
+import com.hazelcast.core.MultiMap;
 
 public class Query4 extends Query {
 
     private static final String OUTPUT_HEADER = "Infraction;Min;Max;Diff";
     private final Integer n;
     private final String agency;
-    private IMap<Ticket, InfractionAndAmount> ticketIMap;
+    private IMap<Ticket, InfractionAndAmount> ticketMMap;
     private IMap<String, String> infractionIMap;
 
     public Query4(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, Integer n, String agency){
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
         this.n = n;
         this.agency = agency.replace('_',' ');
-        this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q4");
+        this.ticketMMap = hazelcastInstance.getMap("g10-tickets-q4");
         this.infractionIMap = hazelcastInstance.getMap("g10-infractions-q4");
     }
 
@@ -54,7 +55,7 @@ public class Query4 extends Query {
         try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(ticket, new InfractionAndAmount(ticket.getInfractionId(), ticket.getFineAmount(), infractionIMap.getOrDefault(ticket.getInfractionId(), null)));
+                ticketMMap.put(ticket, new InfractionAndAmount(ticket.getInfractionId(), ticket.getFineAmount(), infractionIMap.getOrDefault(ticket.getInfractionId(), null)));
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +66,7 @@ public class Query4 extends Query {
     protected void executeJob() {
 
         JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query4");
-        Job<Ticket, InfractionAndAmount> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
+        Job<Ticket, InfractionAndAmount> job = jobTracker.newJob(KeyValueSource.fromMap(ticketMMap));
         ICompletableFuture<SortedSet<InfractionAndAmountStats>> future = job
                 .keyPredicate(new CheckAgency(agency))
                 .mapper(new InfractionAndAmountMapper())

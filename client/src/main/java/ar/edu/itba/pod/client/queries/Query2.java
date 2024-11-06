@@ -28,16 +28,17 @@ import java.nio.file.Paths;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.stream.Stream;
+import com.hazelcast.core.MultiMap;
 
 public class Query2 extends Query {
-    private IMap<Ticket, AgencyYearMonth> ticketIMap;
+    private MultiMap<AgencyYearMonth, Long> ticketMMap;
     private IMap<String, String> agencyIMap;
 
     private static final String OUTPUT_HEADER = "Agency;Year;Month;YTD";
 
     public Query2(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath){
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
-        this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q2");
+        this.ticketMMap = hazelcastInstance.getMultiMap("g10-tickets-q2");
         this.agencyIMap = hazelcastInstance.getMap("g10-agencies-q2");
     }
 
@@ -46,8 +47,7 @@ public class Query2 extends Query {
         try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(ticket,new AgencyYearMonth(ticket.getIssuingAgency(),ticket.getIssueDate()));
-            });
+                ticketMMap.put(new AgencyYearMonth(ticket.getIssuingAgency(),ticket.getIssueDate()),ticket.getFineAmount());            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +65,7 @@ public class Query2 extends Query {
         Set<String> validAgencies = agencyIMap.keySet();
 
         JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query2");
-        Job<Ticket, AgencyYearMonth> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
+        Job<AgencyYearMonth, Long> job = jobTracker.newJob(KeyValueSource.fromMultiMap(ticketMMap));
         ICompletableFuture<SortedSet<AgencyYearMonthTotal>> future = job
                 .keyPredicate(new CheckAgencyExistence(validAgencies))
                 .mapper(new AgencyYearMonthMapper())

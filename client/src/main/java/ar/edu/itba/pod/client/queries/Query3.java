@@ -23,10 +23,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.SortedSet;
 import java.util.stream.Stream;
+import com.hazelcast.core.MultiMap;
 
 public class Query3 extends Query {
 
-    private IMap<Ticket, CountyPlateInfractionAndDate> ticketIMap;
+    private MultiMap<CountyPlateInfractionAndDate, Ticket> ticketMMap;
     private int n;
     private LocalDate from;
     private LocalDate to;
@@ -39,15 +40,14 @@ public class Query3 extends Query {
         this.n = n;
         this.from = from;
         this.to = to;
-        this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q3");
+        this.ticketMMap = hazelcastInstance.getMultiMap("g10-tickets-q3");
     }
     @Override
     protected void readCSV() {
         try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(ticket,new CountyPlateInfractionAndDate(ticket.getCountyName(),ticket.getIssueDate(),ticket.getPlate(),ticket.getInfractionId()));
-            });
+                ticketMMap.put(new CountyPlateInfractionAndDate(ticket.getCountyName(),ticket.getIssueDate(),ticket.getPlate(),ticket.getInfractionId()), ticket);            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,8 +56,7 @@ public class Query3 extends Query {
     @Override
     protected void executeJob() {
         JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query3");
-        Job<Ticket, CountyPlateInfractionAndDate> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
-        ICompletableFuture<SortedSet<CountyPercentage>> future = job
+        Job<CountyPlateInfractionAndDate,Ticket> job = jobTracker.newJob(KeyValueSource.fromMultiMap(ticketMMap));        ICompletableFuture<SortedSet<CountyPercentage>> future = job
                 .keyPredicate(new CheckDatesRange(from,to))
                 .mapper(new CountyMapper())
                 .combiner(new CountyCombiner())
