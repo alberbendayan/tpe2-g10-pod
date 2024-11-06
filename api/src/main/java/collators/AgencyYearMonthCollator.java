@@ -36,6 +36,14 @@ public class AgencyYearMonthCollator implements Collator<Map.Entry<AgencyYearMon
             AgencyYearMonth key = entry.getKey();
 
             if (!key.getAgency().equals(currentAgency) || key.getYear() != currentYear) {
+                if(currentMonth<12 && currentAgency != null){
+                    while (currentMonth <= 12) {
+                        AgencyYearMonth missingMonth = new AgencyYearMonth(currentAgency, LocalDate.of(currentYear, currentMonth, 1));
+                        if(yearToDateSum >0)
+                            result.add(new AgencyYearMonthTotal(missingMonth, yearToDateSum));
+                        currentMonth++;
+                    }
+                }
                 yearToDateSum = 0;
                 currentAgency = key.getAgency();
                 currentYear = key.getYear();

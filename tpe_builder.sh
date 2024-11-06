@@ -24,13 +24,13 @@ if [ "$CLIENT" = true ] ; then
 
   echo "Unpacking client ..."
   pushd client/target &>/dev/null
-  tar -xzf tpe2-g10-pod-client-1.0-SNAPSHOT-bin.tar.gz
-  chmod +x tpe2-g10-pod-client-1.0-SNAPSHOT/*.sh
+  tar -xzf tpe2-g10-client-1.0-SNAPSHOT-bin.tar.gz
+  chmod +x tpe2-g10-client-1.0-SNAPSHOT/*.sh
   popd &>/dev/null
 
   [ -d bin ] || mkdir bin
   [ -d bin/client ] && rm -r bin/client
-  mv client/target/tpe2-g10-pod-client-1.0-SNAPSHOT bin/client
+  mv client/target/tpe2-g10-client-1.0-SNAPSHOT bin/client
 fi
 
 if [ "$SERVER" = true ] ; then
@@ -39,13 +39,13 @@ if [ "$SERVER" = true ] ; then
 
   echo "Unpacking server ..."
   pushd server/target &>/dev/null
-  tar -xzf tpe2-g10-pod-server-1.0-SNAPSHOT-bin.tar.gz
-  chmod +x tpe2-g10-pod-server-1.0-SNAPSHOT/*.sh
+  tar -xzf tpe2-g10-server-1.0-SNAPSHOT-bin.tar.gz
+  chmod +x tpe2-g10-server-1.0-SNAPSHOT/*.sh
   popd &>/dev/null
 
   [ -d bin ] || mkdir bin
   [ -d bin/server ] && rm -r bin/server
-  mv server/target/tpe2-g10-pod-server-1.0-SNAPSHOT bin/server
+  mv server/target/tpe2-g10-server-1.0-SNAPSHOT bin/server
 fi
 
 [ "$CLIENT" = true ] && echo "Client built and unpacked in bin/client"
