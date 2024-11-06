@@ -2,10 +2,11 @@ package keyPredicates;
 
 import com.hazelcast.mapreduce.KeyPredicate;
 import models.CountyPlateInfractionAndDate;
+import models.Ticket;
 
 import java.time.LocalDate;
 
-public class CheckDatesRange implements KeyPredicate<CountyPlateInfractionAndDate> {
+public class CheckDatesRange implements KeyPredicate<Ticket> {
 
     LocalDate from;
     LocalDate to;
@@ -14,8 +15,8 @@ public class CheckDatesRange implements KeyPredicate<CountyPlateInfractionAndDat
         this.to = to;
     }
     @Override
-    public boolean evaluate(CountyPlateInfractionAndDate countyAndDate) {
-        return countyAndDate.getDate().isAfter(from) && countyAndDate.getDate().isBefore(to);
+    public boolean evaluate(Ticket ticket) {
+        return ticket.getIssueDate().isAfter(from) && ticket.getIssueDate().isBefore(to);
     }
 
 

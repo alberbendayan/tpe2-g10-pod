@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 public class Query3 extends Query {
 
-    private IMap<CountyPlateInfractionAndDate, Ticket> ticketIMap;
+    private IMap<Ticket, CountyPlateInfractionAndDate> ticketIMap;
     private int n;
     private LocalDate from;
     private LocalDate to;
@@ -46,7 +46,7 @@ public class Query3 extends Query {
         try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(new CountyPlateInfractionAndDate(ticket.getCountyName(),ticket.getIssueDate(),ticket.getPlate(),ticket.getInfractionId()), ticket);
+                ticketIMap.put(ticket,new CountyPlateInfractionAndDate(ticket.getCountyName(),ticket.getIssueDate(),ticket.getPlate(),ticket.getInfractionId()));
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class Query3 extends Query {
     @Override
     protected void executeJob() {
         JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query3");
-        Job<CountyPlateInfractionAndDate,Ticket> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
+        Job<Ticket, CountyPlateInfractionAndDate> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
         ICompletableFuture<SortedSet<CountyPercentage>> future = job
                 .keyPredicate(new CheckDatesRange(from,to))
                 .mapper(new CountyMapper())

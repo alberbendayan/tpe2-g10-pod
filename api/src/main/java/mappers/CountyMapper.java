@@ -6,10 +6,10 @@ import models.CountyInfractionAndPlate;
 import models.CountyPlateInfractionAndDate;
 import models.Ticket;
 
-public class CountyMapper implements Mapper<CountyPlateInfractionAndDate,Ticket, CountyInfractionAndPlate,Long> {
+public class CountyMapper implements Mapper<Ticket,CountyPlateInfractionAndDate, CountyInfractionAndPlate,Long> {
     private static final Long ONE = 1L;
     @Override
-    public void map(CountyPlateInfractionAndDate countyPlateAndDate, Ticket ticket, Context<CountyInfractionAndPlate, Long> context) {
+    public void map(Ticket ticket, CountyPlateInfractionAndDate countyPlateAndDate, Context<CountyInfractionAndPlate, Long> context) {
         context.emit(new CountyInfractionAndPlate(countyPlateAndDate.getCounty(), countyPlateAndDate.getPlate(),countyPlateAndDate.getInfractionId()),ONE);
     }
 }

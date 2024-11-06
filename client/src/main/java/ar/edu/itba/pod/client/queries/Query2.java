@@ -30,7 +30,7 @@ import java.util.SortedSet;
 import java.util.stream.Stream;
 
 public class Query2 extends Query {
-    private IMap<AgencyYearMonth, Long> ticketIMap;
+    private IMap<Ticket, AgencyYearMonth> ticketIMap;
     private IMap<String, String> agencyIMap;
 
     private static final String OUTPUT_HEADER = "Agency;Year;Month;YTD";
@@ -46,7 +46,7 @@ public class Query2 extends Query {
         try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(new AgencyYearMonth(ticket.getIssuingAgency(),ticket.getIssueDate()),ticket.getFineAmount());
+                ticketIMap.put(ticket,new AgencyYearMonth(ticket.getIssuingAgency(),ticket.getIssueDate()));
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +65,7 @@ public class Query2 extends Query {
         Set<String> validAgencies = agencyIMap.keySet();
 
         JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query2");
-        Job<AgencyYearMonth, Long> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
+        Job<Ticket, AgencyYearMonth> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
         ICompletableFuture<SortedSet<AgencyYearMonthTotal>> future = job
                 .keyPredicate(new CheckAgencyExistence(validAgencies))
                 .mapper(new AgencyYearMonthMapper())
