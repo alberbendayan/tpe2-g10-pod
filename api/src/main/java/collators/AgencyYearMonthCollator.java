@@ -30,40 +30,40 @@ public class AgencyYearMonthCollator implements Collator<Map.Entry<AgencyYearMon
         long yearToDateSum = 0;
         String currentAgency = null;
         int currentYear = -1;
-        int currentMonth = 1;
+//        int currentMonth = 1;
 
         for (Map.Entry<AgencyYearMonth, Long> entry : sortedMap.entrySet()) {
             AgencyYearMonth key = entry.getKey();
 
             if (!key.getAgency().equals(currentAgency) || key.getYear() != currentYear) {
-                if(currentMonth<12 && currentAgency != null){
-                    while (currentMonth <= 12) {
-                        AgencyYearMonth missingMonth = new AgencyYearMonth(currentAgency, LocalDate.of(currentYear, currentMonth, 1));
-                        if(yearToDateSum >0)
-                            result.add(new AgencyYearMonthTotal(missingMonth, yearToDateSum));
-                        currentMonth++;
-                    }
-                }
+//                if(currentMonth<12 && currentAgency != null && !currentAgency.equals(key.getAgency())){
+//                    while (currentMonth <= 12) {
+//                        AgencyYearMonth missingMonth = new AgencyYearMonth(currentAgency, LocalDate.of(currentYear, currentMonth, 1));
+//                        if(yearToDateSum >0)
+//                            result.add(new AgencyYearMonthTotal(missingMonth, yearToDateSum));
+//                        currentMonth++;
+//                    }
+//                }
                 yearToDateSum = 0;
                 currentAgency = key.getAgency();
                 currentYear = key.getYear();
-                currentMonth = 1;
+//                currentMonth = 1;
             }
 
 
-            while (currentMonth < key.getMonth() && currentAgency != null) {
-                AgencyYearMonth missingMonth = new AgencyYearMonth(currentAgency, LocalDate.of(currentYear, currentMonth, 1));
-                if(yearToDateSum >0)
-                    result.add(new AgencyYearMonthTotal(missingMonth, yearToDateSum));
-                currentMonth++;
-            }
+//            while (currentMonth < key.getMonth() && currentAgency != null) {
+//                AgencyYearMonth missingMonth = new AgencyYearMonth(currentAgency, LocalDate.of(currentYear, currentMonth, 1));
+//                if(yearToDateSum >0)
+//                    result.add(new AgencyYearMonthTotal(missingMonth, yearToDateSum));
+//                currentMonth++;
+//            }
 
 
             yearToDateSum += entry.getValue();
             if (yearToDateSum != 0)
                 result.add(new AgencyYearMonthTotal(key, yearToDateSum));
 
-            currentMonth = key.getMonth() + 1;
+//            currentMonth = key.getMonth() + 1;
         }
         return result;
     }
