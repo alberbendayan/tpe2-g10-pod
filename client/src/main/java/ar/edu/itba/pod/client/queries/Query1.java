@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 public class Query1 extends Query {
 
-    private IMap<Ticket, InfractionAndAgency> ticketIMap;
+    private MultiMap<InfractionAndAgency,Ticket> ticketMMap;
     private IMap<String, String> infractionIMap;
     private IMap<String, String> agencyIMap;
 
