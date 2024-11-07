@@ -18,12 +18,10 @@ import models.InfractionAndAgencyTotal;
 import models.Ticket;
 import reducers.InfractionAndAgencyReducer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.stream.Stream;
@@ -32,7 +30,7 @@ public class Query1 extends Query {
 
     private IMap<Ticket, InfractionAndAgency> ticketIMap;
     private IMap<String, String> infractionIMap;
-    private IMap<String, String> agencyIMap;
+    private Set<String> agencySet;
 
     private static final String OUTPUT_HEADER = "Infraction;Agency;Tickets";
 
@@ -40,7 +38,7 @@ public class Query1 extends Query {
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
         this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q1");
         this.infractionIMap = hazelcastInstance.getMap("g10-infractions-q1");
-        this.agencyIMap = hazelcastInstance.getMap("g10-agencies-q1");
+        this.agencySet = new HashSet<>();
     }
 
     @Override
@@ -63,7 +61,7 @@ public class Query1 extends Query {
         }
         try (Stream<String> agencies = Files.lines(Paths.get(inPath, "/agencies"+ city.getName()+ ".csv")).skip(1)) {
             agencies.forEach(line -> {
-                agencyIMap.put(line, line);
+                agencySet.add(line);
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,13 +71,12 @@ public class Query1 extends Query {
     @Override
     protected void executeJob() {
 
-        Set<String> validAgencies = agencyIMap.keySet();
         Set<String> validInfractions = infractionIMap.keySet();
 
         JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query1");
         Job<Ticket, InfractionAndAgency> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
         ICompletableFuture<SortedSet<InfractionAndAgencyTotal>> future = job
-                .keyPredicate(new CheckInfractionAndAgencyExistence(validAgencies, validInfractions))
+                .keyPredicate(new CheckInfractionAndAgencyExistence(agencySet, validInfractions))
                 .mapper(new InfractionAndAgencyMapper())
                 .combiner(new InfractionAndAgencyCombiner())
                 .reducer(new InfractionAndAgencyReducer())
@@ -91,6 +88,9 @@ public class Query1 extends Query {
             writer.write(outPath + "/query1.csv", OUTPUT_HEADER, result);
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            ticketIMap.destroy();
+            infractionIMap.destroy();
         }
 
 

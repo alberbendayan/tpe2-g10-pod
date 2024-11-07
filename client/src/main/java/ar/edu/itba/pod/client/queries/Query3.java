@@ -70,6 +70,8 @@ public class Query3 extends Query {
             writer.write(outPath+"/query3.csv", OUTPUT_HEADER, result);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            ticketIMap.destroy();
         }
     }
 

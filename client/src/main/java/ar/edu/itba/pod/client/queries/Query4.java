@@ -79,6 +79,9 @@ public class Query4 extends Query {
             writer.write(outPath + "/query4.csv", OUTPUT_HEADER, result);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            ticketIMap.destroy();
+            infractionIMap.destroy();
         }
 
     }
