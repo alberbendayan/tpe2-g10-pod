@@ -7,6 +7,7 @@ import collators.InfractionAndAgencyCollator;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IMap;
+import com.hazelcast.core.MultiMap;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
@@ -22,14 +23,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class Query1 extends Query {
 
+    private Logger logger = Logger.getLogger(Query1.class.getName());
     private MultiMap<InfractionAndAgency,Ticket> ticketMMap;
     private IMap<String, String> infractionIMap;
     private IMap<String, String> agencyIMap;
@@ -38,7 +38,7 @@ public class Query1 extends Query {
 
     public Query1(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath) {
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
-        this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q1");
+        this.ticketMMap = hazelcastInstance.getMultiMap("g10-tickets-q1a");
         this.infractionIMap = hazelcastInstance.getMap("g10-infractions-q1");
         this.agencyIMap = hazelcastInstance.getMap("g10-agencies-q1");
     }
@@ -53,10 +53,15 @@ public class Query1 extends Query {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(ticket, new InfractionAndAgency(ticket.getInfractionId(), ticket.getIssuingAgency(), infractionIMap.getOrDefault(ticket.getInfractionId(), null)));
+                if(!ticketMMap.put(new InfractionAndAgency(ticket.getInfractionId(),
+                        ticket.getIssuingAgency(),
+                        infractionIMap.getOrDefault(ticket.getInfractionId(),"")),ticket))
+                    throw new IllegalStateException("Error adding ticket to multimap");
+
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,15 +81,21 @@ public class Query1 extends Query {
         Set<String> validAgencies = agencyIMap.keySet();
         Set<String> validInfractions = infractionIMap.keySet();
 
+
         JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query1");
-        Job<Ticket, InfractionAndAgency> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
+
+        KeyValueSource k = KeyValueSource.fromMultiMap(ticketMMap);
+        logger.info(k.toString());
+
+        Job<InfractionAndAgency,Ticket> job = jobTracker.newJob(k);
+        logger.info("Length of key: "+ticketMMap.keySet().size());
+        logger.info("Length of key: "+ticketMMap.size());
         ICompletableFuture<SortedSet<InfractionAndAgencyTotal>> future = job
                 .keyPredicate(new CheckInfractionAndAgencyExistence(validAgencies, validInfractions))
                 .mapper(new InfractionAndAgencyMapper())
                 .combiner(new InfractionAndAgencyCombiner())
                 .reducer(new InfractionAndAgencyReducer())
                 .submit(new InfractionAndAgencyCollator());
-
         try {
             SortedSet<InfractionAndAgencyTotal> result = future.get();
             CSVwriter<InfractionAndAgencyTotal> writer = new CSVwriter<>();

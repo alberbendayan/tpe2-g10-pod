@@ -1,19 +1,25 @@
 package models;
 
+import com.hazelcast.nio.ObjectDataInput;
+import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.DataSerializable;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class InfractionAndAgency implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class InfractionAndAgency implements DataSerializable {
     private String infractionId;
     private String agency;
     private String infractionName;
 
+    public InfractionAndAgency(){}
     public InfractionAndAgency(String infractionId, String agency, String infractionName) {
         this.infractionId = infractionId;
         this.agency = agency;
         this.infractionName = infractionName;
     }
+
 
     public String getInfractionId() {
         return infractionId;
@@ -42,5 +48,19 @@ public class InfractionAndAgency implements Serializable {
     @Override
     public String toString() {
         return infractionName + ";" + agency;
+    }
+
+    @Override
+    public void writeData(ObjectDataOutput objectDataOutput) throws IOException {
+        objectDataOutput.writeUTF(infractionId);
+        objectDataOutput.writeUTF(agency);
+        objectDataOutput.writeUTF(infractionName);
+    }
+
+    @Override
+    public void readData(ObjectDataInput objectDataInput) throws IOException {
+        infractionId = objectDataInput.readUTF();
+        agency = objectDataInput.readUTF();
+        infractionName = objectDataInput.readUTF();
     }
 }
