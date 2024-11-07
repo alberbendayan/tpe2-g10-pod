@@ -54,7 +54,7 @@ public class Query4 extends Query {
         try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(ticket, new InfractionAndAmount(ticket.getInfractionId(), ticket.getFineAmount(), infractionIMap.getOrDefault(ticket.getInfractionId(), null)));
+                ticketIMap.put(ticket, new InfractionAndAmount(ticket.getInfractionId(), ticket.getFineAmount(), infractionIMap.getOrDefault(ticket.getInfractionId(), "")));
             });
         } catch (IOException e) {
             e.printStackTrace();
