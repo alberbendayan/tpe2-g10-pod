@@ -11,9 +11,9 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 import combiners.InfractionAndAmountCombiner;
-import keyPredicates.CheckAgency;
+import keyPredicates.CheckAgencyAndInfraction;
 import mappers.InfractionAndAmountMapper;
-import models.InfractionAndAgencyTotal;
+import models.Infraction;
 import models.InfractionAndAmount;
 import models.InfractionAndAmountStats;
 import models.Ticket;
@@ -22,6 +22,7 @@ import reducers.InfractionAndAmountReducer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.stream.Stream;
 
@@ -32,6 +33,7 @@ public class Query4 extends Query {
     private final String agency;
     private IMap<Ticket, InfractionAndAmount> ticketIMap;
     private IMap<String, String> infractionIMap;
+
 
     public Query4(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, Integer n, String agency){
         super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
@@ -64,10 +66,12 @@ public class Query4 extends Query {
     @Override
     protected void executeJob() {
 
+        Set<String> validInfractions = infractionIMap.keySet();
+
         JobTracker jobTracker = hazelcastInstance.getJobTracker("g10-query4");
         Job<Ticket, InfractionAndAmount> job = jobTracker.newJob(KeyValueSource.fromMap(ticketIMap));
         ICompletableFuture<SortedSet<InfractionAndAmountStats>> future = job
-                .keyPredicate(new CheckAgency(agency))
+                .keyPredicate(new CheckAgencyAndInfraction(agency,validInfractions))
                 .mapper(new InfractionAndAmountMapper())
                 .combiner(new InfractionAndAmountCombiner())
                 .reducer(new InfractionAndAmountReducer())
