@@ -37,6 +37,9 @@ public class Ticket implements Serializable {
         return infractionId;
     }
 
+    public UUID getId() {
+        return id;
+    }
     public void setInfractionId(String infractionId) {
         this.infractionId = infractionId;
     }
