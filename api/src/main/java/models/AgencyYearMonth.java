@@ -11,13 +11,11 @@ public class AgencyYearMonth implements Serializable {
     private int year;
     private int month;
 
-    private UUID ticketID;
 
-    public AgencyYearMonth(String agency, LocalDate date, UUID ticketID) {
+    public AgencyYearMonth(String agency, LocalDate date) {
         this.agency = agency;
         this.year = date.getYear();
         this.month = date.getMonthValue();
-        this.ticketID=ticketID;
     }
 
     public String getAgency() {
@@ -31,9 +29,7 @@ public class AgencyYearMonth implements Serializable {
     public int getMonth() {
         return month;
     }
-    public UUID getTicketID() {
-        return ticketID;
-    }
+
 
     @Override
     public String toString() {
@@ -44,11 +40,11 @@ public class AgencyYearMonth implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AgencyYearMonth that)) return false;
-        return year == that.year && month == that.month && agency.equals(that.agency) && ticketID.equals(that.ticketID);
+        return year == that.year && month == that.month && agency.equals(that.agency);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(agency, year, month,ticketID);
+        return Objects.hash(agency, year, month);
     }
 }

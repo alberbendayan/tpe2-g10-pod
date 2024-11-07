@@ -35,42 +35,47 @@ public class Client {
 
         // Node Client
         HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
+        try {
+            Query query = null;
+            switch (System.getProperty("query")) {
+                case "1":
+                    query = new Query1(hazelcastInstance,
+                            City.fromString(System.getProperty("city")),
+                            System.getProperty("inPath"),
+                            System.getProperty("outPath"));
+                    break;
+                case "2":
+                    query = new Query2(hazelcastInstance,
+                            City.fromString(System.getProperty("city")),
+                            System.getProperty("inPath"),
+                            System.getProperty("outPath"));
+                    break;
+                case "3":
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    query = new Query3(hazelcastInstance,
+                            City.fromString(System.getProperty("city")),
+                            System.getProperty("inPath"),
+                            System.getProperty("outPath"),
+                            Integer.parseInt(System.getProperty("n")),
+                            LocalDate.parse(System.getProperty("from"), formatter),
+                            LocalDate.parse(System.getProperty("to"), formatter));
+                    break;
+                case "4":
+                    query = new Query4(hazelcastInstance,
+                            City.fromString(System.getProperty("city")),
+                            System.getProperty("inPath"),
+                            System.getProperty("outPath"),
+                            Integer.parseInt(System.getProperty("n")),
+                            System.getProperty("agency"));
+                    break;
+            }
 
-        Query query = null;
-        switch(System.getProperty("query")) {
-            case "1":
-                query = new Query1(hazelcastInstance,
-                        City.fromString(System.getProperty("city")),
-                        System.getProperty("inPath"),
-                        System.getProperty("outPath"));
-                break;
-            case "2":
-                query = new Query2(hazelcastInstance,
-                        City.fromString(System.getProperty("city")),
-                        System.getProperty("inPath"),
-                        System.getProperty("outPath"));
-                break;
-            case "3":
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                query = new Query3(hazelcastInstance,
-                        City.fromString(System.getProperty("city")),
-                        System.getProperty("inPath"),
-                        System.getProperty("outPath"),
-                        Integer.parseInt(System.getProperty("n")),
-                        LocalDate.parse(System.getProperty("from"),formatter),
-                        LocalDate.parse(System.getProperty("to"),formatter));
-                break;
-            case "4":
-                query = new Query4(hazelcastInstance,
-                        City.fromString(System.getProperty("city")),
-                        System.getProperty("inPath"),
-                        System.getProperty("outPath"),
-                        Integer.parseInt(System.getProperty("n")),
-                        System.getProperty("agency"));
-                break;
+            query.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            hazelcastInstance.shutdown();
         }
-        query.run();
-        hazelcastInstance.shutdown();
 
     }
 }
