@@ -1,14 +1,20 @@
 package models;
 
+import com.hazelcast.nio.ObjectDataInput;
+import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.DataSerializable;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class InfractionAndAmount implements Serializable {
-    private static final Long serialVersionUID = 1L;
+public class InfractionAndAmount implements DataSerializable {
     private String infractionId;
     private Long amount;
     private String infractionName;
 
+    public InfractionAndAmount() {
+    }
     public InfractionAndAmount(String infractionId, Long amount, String infractionName) {
         this.infractionId = infractionId;
         this.amount = amount;
@@ -39,4 +45,17 @@ public class InfractionAndAmount implements Serializable {
         return Objects.hash(infractionId, amount, infractionName);
     }
 
+    @Override
+    public void writeData(ObjectDataOutput objectDataOutput) throws IOException {
+        objectDataOutput.writeUTF(infractionId);
+        objectDataOutput.writeLong(amount);
+        objectDataOutput.writeUTF(infractionName);
+    }
+
+    @Override
+    public void readData(ObjectDataInput objectDataInput) throws IOException {
+        infractionId = objectDataInput.readUTF();
+        amount = objectDataInput.readLong();
+        infractionName = objectDataInput.readUTF();
+    }
 }

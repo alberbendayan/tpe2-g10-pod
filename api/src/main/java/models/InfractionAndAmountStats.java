@@ -1,12 +1,19 @@
 package models;
 
+import com.hazelcast.nio.ObjectDataInput;
+import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.DataSerializable;
+
+import java.io.IOException;
 import java.io.Serializable;
 
-public class InfractionAndAmountStats implements Serializable {
-    private static final Long serialVersionUID = 1L;
+public class InfractionAndAmountStats implements DataSerializable {
     private String infractionName;
     private Long minAmount;
     private Long maxAmount;
+
+    public InfractionAndAmountStats() {
+    }
 
     public InfractionAndAmountStats(InfractionAndAmount infractionAndAmount) {
         this.infractionName = infractionAndAmount.getInfractionName();
@@ -49,4 +56,17 @@ public class InfractionAndAmountStats implements Serializable {
         return infractionName + ";" + minAmount + ";" + maxAmount + ";" + getDifference();
     }
 
+    @Override
+    public void writeData(ObjectDataOutput objectDataOutput) throws IOException {
+        objectDataOutput.writeUTF(infractionName);
+        objectDataOutput.writeLong(minAmount);
+        objectDataOutput.writeLong(maxAmount);
+    }
+
+    @Override
+    public void readData(ObjectDataInput objectDataInput) throws IOException {
+        infractionName = objectDataInput.readUTF();
+        minAmount = objectDataInput.readLong();
+        maxAmount = objectDataInput.readLong();
+    }
 }

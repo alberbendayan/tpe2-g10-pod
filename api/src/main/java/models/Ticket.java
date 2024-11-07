@@ -1,11 +1,15 @@
 package models;
 
+import com.hazelcast.nio.ObjectDataInput;
+import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.DataSerializable;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class Ticket implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Ticket implements DataSerializable {
     private UUID id;
     private String plate;
     private String infractionId;
@@ -14,6 +18,8 @@ public class Ticket implements Serializable {
     private LocalDate issueDate;
     private String countyName;
 
+    public Ticket() {
+    }
     public Ticket(String plate, String infractionId, Long fineAmount, String issuingAgency, LocalDate issueDate, String countyName) {
         this.id=UUID.randomUUID();
         this.plate = plate;
@@ -74,5 +80,25 @@ public class Ticket implements Serializable {
 
     public void setCountyName(String countyName) {
         this.countyName = countyName;
+    }
+
+    @Override
+    public void writeData(ObjectDataOutput objectDataOutput) throws IOException {
+        objectDataOutput.writeUTF(plate);
+        objectDataOutput.writeUTF(infractionId);
+        objectDataOutput.writeLong(fineAmount);
+        objectDataOutput.writeUTF(issuingAgency);
+        objectDataOutput.writeUTF(issueDate.toString());
+        objectDataOutput.writeUTF(countyName);
+    }
+
+    @Override
+    public void readData(ObjectDataInput objectDataInput) throws IOException {
+        plate = objectDataInput.readUTF();
+        infractionId = objectDataInput.readUTF();
+        fineAmount = objectDataInput.readLong();
+        issuingAgency = objectDataInput.readUTF();
+        issueDate = LocalDate.parse(objectDataInput.readUTF());
+        countyName = objectDataInput.readUTF();
     }
 }
