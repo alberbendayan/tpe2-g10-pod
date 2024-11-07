@@ -46,7 +46,7 @@ public class Query2 extends Query {
         try (Stream<String> tickets = Files.lines(Paths.get(inPath, "/tickets"+ city.getName()+ ".csv")).skip(1)) {
             tickets.forEach(line -> {
                 Ticket ticket = cityFormatter.formatTicket(line);
-                ticketIMap.put(new AgencyYearMonth(ticket.getIssuingAgency(),ticket.getIssueDate()),ticket.getFineAmount());
+                ticketIMap.put(new AgencyYearMonth(ticket.getIssuingAgency(),ticket.getIssueDate(),ticket.getId()),ticket.getFineAmount());
             });
         } catch (IOException e) {
             e.printStackTrace();

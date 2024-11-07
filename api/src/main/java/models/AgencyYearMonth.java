@@ -3,6 +3,7 @@ package models;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 public class AgencyYearMonth implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -10,10 +11,13 @@ public class AgencyYearMonth implements Serializable {
     private int year;
     private int month;
 
-    public AgencyYearMonth(String agency, LocalDate date) {
+    private UUID ticketID;
+
+    public AgencyYearMonth(String agency, LocalDate date, UUID ticketID) {
         this.agency = agency;
         this.year = date.getYear();
         this.month = date.getMonthValue();
+        this.ticketID=ticketID;
     }
 
     public String getAgency() {
@@ -27,6 +31,9 @@ public class AgencyYearMonth implements Serializable {
     public int getMonth() {
         return month;
     }
+    public UUID getTicketID() {
+        return ticketID;
+    }
 
     @Override
     public String toString() {
@@ -37,11 +44,11 @@ public class AgencyYearMonth implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AgencyYearMonth that)) return false;
-        return year == that.year && month == that.month && agency.equals(that.agency);
+        return year == that.year && month == that.month && agency.equals(that.agency) && ticketID.equals(that.ticketID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(agency, year, month);
+        return Objects.hash(agency, year, month,ticketID);
     }
 }
