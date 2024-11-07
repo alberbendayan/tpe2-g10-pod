@@ -18,6 +18,7 @@ import models.InfractionAndAmount;
 import models.InfractionAndAmountStats;
 import models.Ticket;
 import reducers.InfractionAndAmountReducer;
+import reducers.InfractionAndAmountReducer2;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -75,8 +76,10 @@ public class Query4 extends Query {
                 .mapper(new InfractionAndAmountMapper())
                 .combiner(new InfractionAndAmountCombiner())
                 .reducer(new InfractionAndAmountReducer())
+//                .reducer(new InfractionAndAmountReducer2())
                 .submit(new InfractionAndAmountCollator(n));
 
+        // Si se quiere usar sin combiner, hay que cambiar el reducer a InfractionAndAmountReducer2
         try {
             SortedSet<InfractionAndAmountStats> result = future.get();
             CSVwriter<InfractionAndAmountStats> writer = new CSVwriter<>();
