@@ -31,8 +31,8 @@ public class Query2 extends Query {
 
     private static final String OUTPUT_HEADER = "Agency;Year;Month;YTD";
 
-    public Query2(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath){
-        super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
+    public Query2(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath) {
+        super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER, 2);
         this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q2");
         this.agencySet = new HashSet<>();
     }

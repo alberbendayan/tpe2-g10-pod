@@ -21,23 +21,25 @@ public abstract class Query {
     protected String outPath;
     protected String outputHeader;
     protected FileWriter writer;
+    protected int queryNumber;
 
     protected Formatter cityFormatter;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSSS");
-    public Query(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, String outputHeader) {
+    public Query(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, String outputHeader, int queryNumber) {
         this.hazelcastInstance = hazelcastInstance;
         this.city = city;
         this.inPath = inPath;
         this.outPath = outPath;
         this.outputHeader = outputHeader;
+        this.queryNumber = queryNumber;
         try {
             Path outputPath = Path.of(outPath);
             if (Files.notExists(outputPath)) {
                 Files.createDirectories(outputPath);
             }
-            this.writer = new FileWriter(outPath + "/time.txt");
+            this.writer = new FileWriter(outPath + "/time"+queryNumber+".txt");
         } catch (IOException e) {
             System.out.println("Error creating time file");
         }

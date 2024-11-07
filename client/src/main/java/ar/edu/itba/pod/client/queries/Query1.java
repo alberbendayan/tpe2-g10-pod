@@ -35,7 +35,7 @@ public class Query1 extends Query {
     private static final String OUTPUT_HEADER = "Infraction;Agency;Tickets";
 
     public Query1(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath) {
-        super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
+        super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER, 1);
         this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q1");
         this.infractionIMap = hazelcastInstance.getMap("g10-infractions-q1");
         this.agencySet = new HashSet<>();

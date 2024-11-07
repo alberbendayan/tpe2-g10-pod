@@ -37,7 +37,7 @@ public class Query4 extends Query {
 
 
     public Query4(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, Integer n, String agency){
-        super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
+        super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER,4);
         this.n = n;
         this.agency = agency.replace('_',' ');
         this.ticketIMap = hazelcastInstance.getMap("g10-tickets-q4");

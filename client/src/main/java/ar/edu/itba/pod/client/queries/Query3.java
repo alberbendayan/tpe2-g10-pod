@@ -35,7 +35,7 @@ public class Query3 extends Query {
     private static final String OUTPUT_HEADER = "County;Percentage";
 
     public Query3(HazelcastInstance hazelcastInstance, City city, String inPath, String outPath, int n, LocalDate from, LocalDate to) {
-        super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER);
+        super(hazelcastInstance, city, inPath, outPath, OUTPUT_HEADER,3);
         this.n = n;
         this.from = from;
         this.to = to;
