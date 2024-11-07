@@ -19,49 +19,33 @@ public class Server {
     private static final String DEFAULT_ADDRESS = "127.0.0.1";
     private static final String PUBLIC_ADDRESS = "127.0.0.1";
 
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) {
+        logger.info(" Server Starting ...");
 
-        String network = null;  // Puede cambiarse a una dirección específica si es necesario
-        List<String> memberAddresses = new ArrayList<>();
-        String address = DEFAULT_ADDRESS;
+        String[] interfaces = System.getProperty("interfaces", "127.0.0.*").split(";");
 
-        logger.info("hz-config Server Starting ...");
+        // Config
         Config config = new Config();
+
+        // Group Config
         GroupConfig groupConfig = new GroupConfig().setName(CLUSTER_NAME).setPassword(CLUSTER_PASSWORD);
         config.setGroupConfig(groupConfig);
 
+        // Network Config
         MulticastConfig multicastConfig = new MulticastConfig();
-        JoinConfig joinConfig;
-        TcpIpConfig tcpIpConfig;
 
-        // Configuración de miembros del cluster
-        if (!memberAddresses.isEmpty()) {
-            multicastConfig.setEnabled(false);
-            tcpIpConfig = new TcpIpConfig().setEnabled(true);
-            memberAddresses.forEach(tcpIpConfig::addMember);
-            joinConfig = new JoinConfig().setMulticastConfig(multicastConfig).setTcpIpConfig(tcpIpConfig);
-        } else {
-            multicastConfig.setEnabled(true);
-            joinConfig = new JoinConfig().setMulticastConfig(multicastConfig);
-        }
+        JoinConfig joinConfig = new JoinConfig().setMulticastConfig(multicastConfig);
 
-        // Configuración de interfaces de red
-        InterfacesConfig interfacesConfig = new InterfacesConfig();
-        if (network != null) {
-            interfacesConfig.setInterfaces(Collections.singletonList(network)).setEnabled(true);
-        } else {
-            interfacesConfig.setEnabled(false); // Desactiva si no se necesita configurar una interfaz específica
-        }
+        InterfacesConfig interfacesConfig = new InterfacesConfig()
+                .setInterfaces(List.of(interfaces))
+                .setEnabled(true);
 
-        NetworkConfig networkConfig = new NetworkConfig()
-                .setInterfaces(interfacesConfig)
-                .setJoin(joinConfig);
-        if (address != null) {
-            networkConfig.setPublicAddress(address);
-        }
+        NetworkConfig networkConfig = new NetworkConfig().setInterfaces(interfacesConfig).setJoin(joinConfig);
+
         config.setNetworkConfig(networkConfig);
+        config.setInstanceName(CLUSTER_NAME);
 
-        // Inicializar la instancia de Hazelcast
-        HazelcastInstance hz = Hazelcast.newHazelcastInstance(config);
+
+        Hazelcast.newHazelcastInstance(config);
     }
 }

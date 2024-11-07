@@ -28,7 +28,7 @@ public class Client {
 
         //Client Network Config
         ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
-        //clientNetworkConfig.addAddress(addresses); TODO: PONER IP DEL CLIENTE
+        clientNetworkConfig.addAddress(System.getProperty("addresses").split(";"));
 
         // Client Config
         ClientConfig clientConfig = new ClientConfig().setGroupConfig(groupConfig).setNetworkConfig(clientNetworkConfig);
