@@ -2,9 +2,11 @@ package models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class Ticket implements Serializable {
     private static final long serialVersionUID = 1L;
+    private UUID id;
     private String plate;
     private String infractionId;
     private Long fineAmount;
@@ -13,6 +15,7 @@ public class Ticket implements Serializable {
     private String countyName;
 
     public Ticket(String plate, String infractionId, Long fineAmount, String issuingAgency, LocalDate issueDate, String countyName) {
+        this.id=UUID.randomUUID();
         this.plate = plate;
         this.infractionId = infractionId;
         this.fineAmount = fineAmount;

@@ -70,6 +70,7 @@ public class Client {
                 break;
         }
         query.run();
+        hazelcastInstance.shutdown();
 
     }
 }
