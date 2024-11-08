@@ -47,7 +47,7 @@ Donde el servidor por default esta escuchando conexiones en el puerto 50052. En 
 
 ###Cliente
 En todos los queries se debe reemplazar:
-xx.xx.xx.xx:yyyy es la dirección IP y el puerto donde está publicado el servicio de administración.
+xx.xx.xx.xx:yyyy se refiere a las direcciones IP de los nodos con sus puertos (una o más, separadas por punto y coma) .
 CITY es el nombre de la ciudad donde se encuentra la agencia de tránsito puede ser NYC o CHI.
 inPath es el path a la carpeta de donde se leen los csv.
 outPath es el path a la carpeta de donde se escriben los csv.
